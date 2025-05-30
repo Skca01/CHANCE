@@ -112,7 +112,7 @@ function createCenterMessage() {
     ctx.textAlign = 'center';
     ctx.fillText('Do I still have a chance? 💕', 256, 100);
     ctx.fillText('We had a misunderstanding,', 256, 150);
-    ctx.fillText('but my heart is yours.', 256, 200);
+    ctx.fillText('but my heart is yours hahahhaha.', 256, 200);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.needsUpdate = true;
