@@ -8,6 +8,7 @@ document.body.appendChild(renderer.domElement);
 const audio = document.getElementById('background-music');
 audio.volume = 1.0;
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const audioControl = document.getElementById('audio-control');
 
 camera.position.set(0, 0, 6);
 
@@ -182,6 +183,20 @@ window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+function playAudio() {
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume().then(() => {
+            audio.play().catch(error => {
+                console.error("Audio playback failed:", error);
+            });
+        });
+    } else {
+        audio.play().catch(error => {
+            console.error("Audio playback failed:", error);
+        });
+    }
+}
+
 function triggerAnimation() {
     if (!animationTriggered) {
         animationTriggered = true;
@@ -190,19 +205,19 @@ function triggerAnimation() {
             sprite.userData.progress = 0;
             sprite.userData.swirlAngle = Math.random() * 2 * Math.PI;
         });
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume().then(() => {
-                audio.play().catch(error => {
-                    console.error("Audio playback failed:", error);
-                });
-            });
-        } else {
-            audio.play().catch(error => {
-                console.error("Audio playback failed:", error);
-            });
-        }
+        playAudio();
     }
 }
+
+audioControl.addEventListener('click', () => {
+    if (audio.paused) {
+        playAudio();
+        audioControl.textContent = 'Pause Music';
+    } else {
+        audio.pause();
+        audioControl.textContent = 'Play Music';
+    }
+});
 
 renderer.domElement.addEventListener('click', triggerAnimation);
 
