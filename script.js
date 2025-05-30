@@ -110,11 +110,11 @@ function createCenterMessage() {
     ctx.shadowColor = '#ff3399';
     ctx.shadowBlur = 15;
     ctx.textAlign = 'center';
-    ctx.fillText('Do I still have a chance? 💕', 256, 100);
-    ctx.fillText('We had a misunderstanding,', 256, 150);
-    ctx.fillText('but my heart is yours.', 256, 200);
-    ctx.fillText('Suwayig " No " gaan tikag singko hahahha.', 256, 250);
-
+    
+    ctx.fillText('but my heart is yours. 💕', 256, 80);
+    ctx.fillText('Do I still have a chance?', 256, 130);
+    ctx.fillText('We had a misunderstanding,', 256, 180);
+    ctx.fillText('Suwayig " No " gaan tikag singko hahahha', 256, 230);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.needsUpdate = true;
