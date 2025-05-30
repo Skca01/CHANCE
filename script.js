@@ -7,6 +7,7 @@ document.body.appendChild(renderer.domElement);
 
 const audio = document.getElementById('background-music');
 audio.volume = 1.0;
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 camera.position.set(0, 0, 6);
 
@@ -189,9 +190,17 @@ function triggerAnimation() {
             sprite.userData.progress = 0;
             sprite.userData.swirlAngle = Math.random() * 2 * Math.PI;
         });
-        audio.play().catch(error => {
-            console.log("Autoplay prevented:", error);
-        });
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume().then(() => {
+                audio.play().catch(error => {
+                    console.error("Audio playback failed:", error);
+                });
+            });
+        } else {
+            audio.play().catch(error => {
+                console.error("Audio playback failed:", error);
+            });
+        }
     }
 }
 
@@ -202,6 +211,7 @@ let prevTouchX = 0;
 let prevTouchY = 0;
 
 renderer.domElement.addEventListener('touchstart', (event) => {
+    event.preventDefault();
     isTouching = true;
     const touch = event.touches[0];
     prevTouchX = touch.clientX;
@@ -210,6 +220,7 @@ renderer.domElement.addEventListener('touchstart', (event) => {
 });
 
 renderer.domElement.addEventListener('touchmove', (event) => {
+    event.preventDefault();
     if (isTouching) {
         const touch = event.touches[0];
         const deltaX = touch.clientX - prevTouchX;
