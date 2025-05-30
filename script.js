@@ -102,19 +102,19 @@ points.forEach((point, index) => {
 let centerSprite = null;
 function createCenterMessage() {
     const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 256;
+    canvas.width = 650;
+    canvas.height = 280;
     const ctx = canvas.getContext('2d');
-    ctx.font = 'bold 36px "Dancing Script"';
+    ctx.font = 'bold 32px "Dancing Script"';
     ctx.fillStyle = 'rgba(255, 102, 178, 0.9)';
     ctx.shadowColor = '#ff3399';
     ctx.shadowBlur = 15;
     ctx.textAlign = 'center';
     
-    ctx.fillText('Do I still have a chance?💕', 256, 80);
-    ctx.fillText('I know its a misunderstanding', 256, 130);
-    ctx.fillText('but my heart is still yours.', 256, 180);
-    ctx.fillText('Suwayig "No" gaan tikag singko hahaha', 256, 230);
+    ctx.fillText('Do I still have a chance?💕', 325, 80);
+    ctx.fillText('I know its a misunderstanding', 325, 130);
+    ctx.fillText('but my heart is still yours.', 325, 180);
+    ctx.fillText('Suwayig "No" gaan tikag singko hahaha', 325, 230);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.needsUpdate = true;
@@ -126,7 +126,7 @@ function createCenterMessage() {
     });
     centerSprite = new THREE.Sprite(material);
     centerSprite.position.set(0, 0, 0);
-    centerSprite.scale.set(1.5, 0.75, 1);
+    centerSprite.scale.set(1.8, 0.8, 1);
     heartGroup.add(centerSprite);
 }
 createCenterMessage();
@@ -191,7 +191,7 @@ function createFirework() {
                 (Math.random() - 0.5) * 3,
                 (Math.random() - 0.5) * 3
             ),
-            life: 2 // Extended life for slower fireworks
+            life: 2
         };
         particles.add(sprite);
     }
@@ -308,7 +308,7 @@ function animate() {
 
     if (celebrationActive && celebrationSprite) {
         celebrationSprite.material.opacity = Math.min(celebrationSprite.material.opacity + 0.01, 0.9);
-        if (time % 0.8 < 0.01) { // Slower firework spawn rate
+        if (time % 0.8 < 0.01) {
             createFirework();
         }
         if (time % 0.1 < 0.01) {
@@ -349,11 +349,11 @@ function animate() {
 
     fireworks.forEach(particles => {
         particles.children.forEach(sprite => {
-            sprite.userData.life -= 0.01; // Slower decay for fireworks
+            sprite.userData.life -= 0.01;
             if (sprite.userData.life > 0) {
-                sprite.position.add(sprite.userData.velocity.clone().multiplyScalar(0.03)); // Slower movement
+                sprite.position.add(sprite.userData.velocity.clone().multiplyScalar(0.03));
                 sprite.material.opacity = sprite.userData.life * 0.8;
-                sprite.userData.velocity.multiplyScalar(0.97); // Slower damping
+                sprite.userData.velocity.multiplyScalar(0.97);
             } else {
                 sprite.material.opacity = 0;
             }
@@ -377,7 +377,7 @@ function animate() {
     });
 
     glowingHearts.forEach(sprite => {
-        sprite.userData.life -= 0.008; // Slower decay for glowing hearts
+        sprite.userData.life -= 0.008;
         if (sprite.userData.life > 0) {
             sprite.position.add(sprite.userData.velocity.clone().multiplyScalar(0.03));
             sprite.userData.pulse += 0.05;
@@ -459,7 +459,7 @@ yesBtn.addEventListener('click', () => {
     responseButtons.style.display = 'none';
     celebrationActive = true;
     for (let i = 0; i < 8; i++) {
-        setTimeout(createFirework, i * 400); // Slower, staggered fireworks
+        setTimeout(createFirework, i * 400);
     }
     for (let i = 0; i < 15; i++) {
         setTimeout(createLoveParticle, i * 100);
