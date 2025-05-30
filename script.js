@@ -11,6 +11,9 @@ const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const startScreen = document.getElementById('start-screen');
 const startBtn = document.getElementById('start-btn');
 const audioControl = document.getElementById('audio-control');
+const responseButtons = document.getElementById('response-buttons');
+const yesBtn = document.getElementById('yes-btn');
+const noBtn = document.getElementById('no-btn');
 
 camera.position.set(0, 0, 6);
 
@@ -126,6 +129,33 @@ function createCenterMessage() {
 }
 createCenterMessage();
 
+let celebrationSprite = null;
+function createCelebrationMessage() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    ctx.font = 'bold 40px "Dancing Script"';
+    ctx.fillStyle = 'rgba(255, 153, 204, 0.9)';
+    ctx.shadowColor = '#ff66b2';
+    ctx.shadowBlur = 20;
+    ctx.textAlign = 'center';
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    const material = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending
+    });
+    celebrationSprite = new THREE.Sprite(material);
+    celebrationSprite.position.set(0, 2, 0);
+    celebrationSprite.scale.set(1.8, 0.9, 1);
+    heartGroup.add(celebrationSprite);
+}
+createCelebrationMessage();
+
 const ambientLight = new THREE.AmbientLight(0x332233, 0.5);
 scene.add(ambientLight);
 const pointLight = new THREE.PointLight(0xff66b2, 1.5, 10);
@@ -135,9 +165,124 @@ const pointLight2 = new THREE.PointLight(0xcc33ff, 1, 10);
 pointLight2.position.set(-5, -5, 5);
 scene.add(pointLight2);
 
+const fireworks = [];
+const loveParticles = [];
+const glowingHearts = [];
+const sparklingTrail = [];
+
+function createFirework() {
+    const particleCount = 50;
+    const particles = new THREE.Group();
+    for (let i = 0; i < particleCount; i++) {
+        const material = new THREE.SpriteMaterial({
+            color: new THREE.Color(`hsl(${Math.random() * 60 + 300}, 80%, 70%)`),
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        const sprite = new THREE.Sprite(material);
+        sprite.position.set(0, 0, 0);
+        sprite.scale.set(0.1, 0.1, 1);
+        sprite.userData = {
+            velocity: new THREE.Vector3(
+                (Math.random() - 0.5) * 3,
+                (Math.random() - 0.5) * 3,
+                (Math.random() - 0.5) * 3
+            ),
+            life: 2 // Extended life for slower fireworks
+        };
+        particles.add(sprite);
+    }
+    particles.position.set((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2, 0);
+    scene.add(particles);
+    fireworks.push(particles);
+}
+
+function createLoveParticle() {
+    const material = new THREE.SpriteMaterial({
+        color: new THREE.Color(`hsl(${Math.random() * 30 + 330}, 90%, 80%)`),
+        transparent: true,
+        opacity: 0.6,
+        blending: THREE.AdditiveBlending
+    });
+    const sprite = new THREE.Sprite(material);
+    sprite.position.set((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4);
+    sprite.scale.set(0.05, 0.05, 1);
+    sprite.userData = {
+        velocity: new THREE.Vector3(
+            (Math.random() - 0.5) * 0.5,
+            Math.random() * 0.5 + 0.5,
+            (Math.random() - 0.5) * 0.5
+        ),
+        life: 2
+    };
+    scene.add(sprite);
+    loveParticles.push(sprite);
+}
+
+function createGlowingHeart() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    ctx.font = 'bold 40px Georgia';
+    ctx.fillStyle = 'rgba(255, 102, 178, 0.9)';
+    ctx.shadowColor = '#ff3399';
+    ctx.shadowBlur = 10;
+    ctx.textAlign = 'center';
+    ctx.fillText('💖', 32, 48);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    const material = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        opacity: 0.7,
+        blending: THREE.AdditiveBlending
+    });
+    const sprite = new THREE.Sprite(material);
+    sprite.position.set((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4);
+    sprite.scale.set(0.2, 0.2, 1);
+    sprite.userData = {
+        velocity: new THREE.Vector3(
+            (Math.random() - 0.5) * 0.3,
+            Math.random() * 0.3 + 0.2,
+            (Math.random() - 0.5) * 0.3
+        ),
+        life: 3,
+        pulse: Math.random() * Math.PI * 2
+    };
+    scene.add(sprite);
+    glowingHearts.push(sprite);
+}
+
+function createSparklingTrail() {
+    const material = new THREE.SpriteMaterial({
+        color: new THREE.Color(`hsl(${Math.random() * 30 + 330}, 90%, 90%)`),
+        transparent: true,
+        opacity: 0.5,
+        blending: THREE.AdditiveBlending
+    });
+    const sprite = new THREE.Sprite(material);
+    sprite.position.set((Math.random() - 0.5) * 3, -2, (Math.random() - 0.5) * 3);
+    sprite.scale.set(0.03, 0.03, 1);
+    sprite.userData = {
+        velocity: new THREE.Vector3(
+            (Math.random() - 0.5) * 0.2,
+            Math.random() * 0.4 + 0.3,
+            (Math.random() - 0.5) * 0.2
+        ),
+        life: 1.5
+    };
+    scene.add(sprite);
+    sparklingTrail.push(sprite);
+}
+
 let time = 0;
 let animationTriggered = false;
 let zoomProgress = 0;
+let buttonsShown = false;
+let celebrationActive = false;
 
 function animate() {
     requestAnimationFrame(animate);
@@ -150,8 +295,28 @@ function animate() {
         }
         if (zoomProgress < 1) {
             zoomProgress += 0.005;
-            camera.position.z = 6 - 1.5 * zoomProgress; // Zoom from z=6 to z=4.5
+            camera.position.z = 6 - 1.5 * zoomProgress;
             camera.updateProjectionMatrix();
+        }
+        if (!buttonsShown && centerSprite.material.opacity >= 0.9) {
+            responseButtons.style.display = 'flex';
+            buttonsShown = true;
+        }
+    }
+
+    if (celebrationActive && celebrationSprite) {
+        celebrationSprite.material.opacity = Math.min(celebrationSprite.material.opacity + 0.01, 0.9);
+        if (time % 0.8 < 0.01) { // Slower firework spawn rate
+            createFirework();
+        }
+        if (time % 0.1 < 0.01) {
+            createLoveParticle();
+        }
+        if (time % 0.15 < 0.01) {
+            createGlowingHeart();
+        }
+        if (time % 0.05 < 0.01) {
+            createSparklingTrail();
         }
     }
 
@@ -178,6 +343,63 @@ function animate() {
         const pulse = 0.8 + 0.1 * Math.sin(time * 2 + sprite.position.x);
         sprite.material.opacity = 0.7 * pulse;
         sprite.scale.set(0.25 * pulse, 0.06 * pulse, 1);
+    });
+
+    fireworks.forEach(particles => {
+        particles.children.forEach(sprite => {
+            sprite.userData.life -= 0.01; // Slower decay for fireworks
+            if (sprite.userData.life > 0) {
+                sprite.position.add(sprite.userData.velocity.clone().multiplyScalar(0.03)); // Slower movement
+                sprite.material.opacity = sprite.userData.life * 0.8;
+                sprite.userData.velocity.multiplyScalar(0.97); // Slower damping
+            } else {
+                sprite.material.opacity = 0;
+            }
+        });
+        if (particles.children.every(sprite => sprite.userData.life <= 0)) {
+            scene.remove(particles);
+            fireworks.splice(fireworks.indexOf(particles), 1);
+        }
+    });
+
+    loveParticles.forEach(sprite => {
+        sprite.userData.life -= 0.01;
+        if (sprite.userData.life > 0) {
+            sprite.position.add(sprite.userData.velocity.clone().multiplyScalar(0.05));
+            sprite.material.opacity = sprite.userData.life * 0.6;
+            sprite.userData.velocity.y -= 0.01;
+        } else {
+            scene.remove(sprite);
+            loveParticles.splice(loveParticles.indexOf(sprite), 1);
+        }
+    });
+
+    glowingHearts.forEach(sprite => {
+        sprite.userData.life -= 0.008; // Slower decay for glowing hearts
+        if (sprite.userData.life > 0) {
+            sprite.position.add(sprite.userData.velocity.clone().multiplyScalar(0.03));
+            sprite.userData.pulse += 0.05;
+            sprite.material.opacity = sprite.userData.life * (0.5 + 0.3 * Math.sin(sprite.userData.pulse));
+            sprite.scale.set(
+                0.2 * (1 + 0.2 * Math.sin(sprite.userData.pulse)),
+                0.2 * (1 + 0.2 * Math.sin(sprite.userData.pulse)),
+                1
+            );
+        } else {
+            scene.remove(sprite);
+            glowingHearts.splice(glowingHearts.indexOf(sprite), 1);
+        }
+    });
+
+    sparklingTrail.forEach(sprite => {
+        sprite.userData.life -= 0.015;
+        if (sprite.userData.life > 0) {
+            sprite.position.add(sprite.userData.velocity.clone().multiplyScalar(0.04));
+            sprite.material.opacity = sprite.userData.life * 0.5;
+        } else {
+            scene.remove(sprite);
+            sparklingTrail.splice(sparklingTrail.indexOf(sprite), 1);
+        }
     });
 
     controls.update();
@@ -229,6 +451,36 @@ audioControl.addEventListener('click', () => {
         audio.pause();
         audioControl.textContent = 'Play Music';
     }
+});
+
+yesBtn.addEventListener('click', () => {
+    responseButtons.style.display = 'none';
+    celebrationActive = true;
+    for (let i = 0; i < 8; i++) {
+        setTimeout(createFirework, i * 400); // Slower, staggered fireworks
+    }
+    for (let i = 0; i < 15; i++) {
+        setTimeout(createLoveParticle, i * 100);
+    }
+    for (let i = 0; i < 10; i++) {
+        setTimeout(createGlowingHeart, i * 200);
+    }
+    for (let i = 0; i < 20; i++) {
+        setTimeout(createSparklingTrail, i * 50);
+    }
+});
+
+noBtn.addEventListener('mouseenter', () => {
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = 50;
+    noBtn.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+});
+
+noBtn.addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = 50;
+    noBtn.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
 });
 
 let isTouching = false;
