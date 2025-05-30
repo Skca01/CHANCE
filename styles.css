@@ -18,3 +18,20 @@ canvas {
     color: #ff66b2;
     text-shadow: 0 0 10px #ff3399, 0 0 20px #cc33ff;
 }
+.audio-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 10px 20px;
+    background: rgba(255, 102, 178, 0.3);
+    border: 1px solid #ff66b2;
+    color: #ff99cc;
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10;
+}
+.audio-btn:hover {
+    background: rgba(255, 102, 178, 0.5);
+}
