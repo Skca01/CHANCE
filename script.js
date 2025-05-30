@@ -8,6 +8,8 @@ document.body.appendChild(renderer.domElement);
 const audio = document.getElementById('background-music');
 audio.volume = 1.0;
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const startScreen = document.getElementById('start-screen');
+const startBtn = document.getElementById('start-btn');
 const audioControl = document.getElementById('audio-control');
 
 camera.position.set(0, 0, 6);
@@ -135,6 +137,7 @@ scene.add(pointLight2);
 
 let time = 0;
 let animationTriggered = false;
+let zoomProgress = 0;
 
 function animate() {
     requestAnimationFrame(animate);
@@ -144,6 +147,11 @@ function animate() {
         heartGroup.rotation.y += 0.005;
         if (centerSprite) {
             centerSprite.material.opacity = Math.min(centerSprite.material.opacity + 0.01, 0.9);
+        }
+        if (zoomProgress < 1) {
+            zoomProgress += 0.005;
+            camera.position.z = 6 - 1.5 * zoomProgress; // Zoom from z=6 to z=4.5
+            camera.updateProjectionMatrix();
         }
     }
 
@@ -200,6 +208,8 @@ function playAudio() {
 function triggerAnimation() {
     if (!animationTriggered) {
         animationTriggered = true;
+        startScreen.style.display = 'none';
+        audioControl.style.display = 'block';
         sprites.forEach(sprite => {
             sprite.userData.isAnimating = true;
             sprite.userData.progress = 0;
@@ -208,6 +218,8 @@ function triggerAnimation() {
         playAudio();
     }
 }
+
+startBtn.addEventListener('click', triggerAnimation);
 
 audioControl.addEventListener('click', () => {
     if (audio.paused) {
@@ -219,8 +231,6 @@ audioControl.addEventListener('click', () => {
     }
 });
 
-renderer.domElement.addEventListener('click', triggerAnimation);
-
 let isTouching = false;
 let prevTouchX = 0;
 let prevTouchY = 0;
@@ -231,7 +241,6 @@ renderer.domElement.addEventListener('touchstart', (event) => {
     const touch = event.touches[0];
     prevTouchX = touch.clientX;
     prevTouchY = touch.clientY;
-    triggerAnimation();
 });
 
 renderer.domElement.addEventListener('touchmove', (event) => {
