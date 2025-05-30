@@ -68,3 +68,28 @@ canvas {
 .audio-btn:hover {
     background: rgba(255, 102, 178, 0.5);
 }
+.response-buttons {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 10;
+}
+.response-btn {
+    padding: 10px 20px;
+    background: rgba(255, 102, 178, 0.5);
+    border: 1px solid #ff66b2;
+    color: #ff99cc;
+    font-family: 'Dancing Script', cursive;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.yes-btn:hover {
+    background: rgba(255, 102, 178, 0.7);
+}
+.no-btn {
+    transition: transform 0.3s ease;
+}
