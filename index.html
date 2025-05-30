@@ -12,7 +12,11 @@
         <source src="taylor.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
-    <button id="audio-control" class="audio-btn">Play Music</button>
+    <div id="start-screen" class="start-screen">
+        <button id="start-btn" class="start-btn">Start</button>
+        <p class="hint-text">Click Start to reveal a surprise!</p>
+    </div>
+    <button id="audio-control" class="audio-btn" style="display: none;">Pause Music</button>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
     <script src="script.js"></script>
